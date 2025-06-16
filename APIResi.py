@@ -4,18 +4,6 @@ import os
 from dotenv import load_dotenv
 
 def get_klikresi_tracking_info(api_key: str, tracking_number: str, courier_code: str):
-    """
-    Fetches real-time tracking information from the KlikResi API.
-
-    Args:
-        api_key (str): Your API key obtained from klikresi.com.
-        tracking_number (str): The airwaybill (AWB) number of the shipment.
-        courier_code (str): The code for the courier (e.g., 'jne' for JNE).
-
-    Returns:
-        dict: A dictionary containing the tracking information if successful,
-              otherwise a dictionary with an 'error' key.
-    """
     base_url = "https://klikresi.com/api/trackings"
     url = f"{base_url}/{tracking_number}/couriers/{courier_code}"
 
@@ -26,7 +14,7 @@ def get_klikresi_tracking_info(api_key: str, tracking_number: str, courier_code:
 
     try:
         response = requests.get(url, headers=headers)
-        response.raise_for_status()  # Raise an exception for bad status codes (4xx or 5xx)
+        response.raise_for_status() 
         return response.json()
     except requests.exceptions.HTTPError as http_err:
         print(f"HTTP error occurred: {http_err} - Response: {response.text}")
@@ -48,15 +36,9 @@ if __name__ == "__main__":
     # Load environment variables from .env file
     load_dotenv()
 
-    # --- IMPORTANT ---
-    # Retrieve your API key from environment variables
-    # Make sure you have a .env file in the same directory as this script
-    # with a line like: KLIKRESI_API_KEY="YOUR_ACTUAL_API_KEY_HERE"
     YOUR_API_KEY = os.getenv("KLIKRESI_API_KEY")
-
-    YOUR_TRACKING_NUMBER = os.getenv("TRACKING_NUMBER") # e.g., "000000000000"
-    YOUR_COURIER_CODE = os.getenv("COURIER_CODE")  # e.g., "jne", "pos", "tiki"
-
+    YOUR_TRACKING_NUMBER = os.getenv("TRACKING_NUMBER") 
+    YOUR_COURIER_CODE = os.getenv("COURIER_CODE")  
     if YOUR_API_KEY is None:
         print("Error: KLIKRESI_API_KEY not found in environment variables.")
         print("Please create a .env file in the same directory as this script with:")
