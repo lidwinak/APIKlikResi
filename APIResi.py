@@ -55,8 +55,61 @@ if __name__ == "__main__":
         if tracking_data and "error" not in tracking_data:
             print("\n--- Tracking Information ---")
             print(json.dumps(tracking_data, indent=4))
+            data_to_take = tracking_data
+            if data_to_take['data']['status'] == 'Delivered':
+                origin_contact_name_dlvrd = data_to_take['data']['origin']['contact_name']
+                origin_address_dlvrd = data_to_take['data']['origin']['address']
+                
+                dest_contact_name_dlvrd = data_to_take['data']['destination']['contact_name']
+                dest_address_dlvrd = data_to_take['data']['destination']['address']
+
+                data_to_take['data']['histories'][0]
+                from datetime import datetime
+
+                datetime_string = data_to_take['data']['histories'][0]['date']
+                
+                if 'T' in datetime_string:
+                    parts = datetime_string.split('T')
+                    date_str_part = parts[0]
+                    time_str_part_with_offset = parts[1]
+
+                    # If you want to remove the timezone offset from the time string:
+                    time_str_part = time_str_part_with_offset.split('+')[0] if '+' in time_str_part_with_offset else \
+                                    time_str_part_with_offset.split('-')[0] if '-' in time_str_part_with_offset[1:] else \
+                                    time_str_part_with_offset # Handles negative offsets and cases without offset
+                    print(f'Barang telah berhasil sampai di tujuan pada {date_str_part} jam {time_str_part}. Barang dikirim dari {origin_contact_name_dlvrd}, {origin_address_dlvrd} untuk tujuan {dest_contact_name_dlvrd}, {dest_address_dlvrd}')
+                else:
+                    print("\n'T' separator not found in the datetime string for string splitting method.")
+                
+            elif data_to_take['data']['status'] == 'InTransit':
+                origin_contact_name_intransit= data_to_take['data']['origin']['contact_name']
+                origin_address_intransit= data_to_take['data']['origin']['address']
+                
+                dest_contact_name_intransit= data_to_take['data']['destination']['contact_name']
+                dest_address_intransit= data_to_take['data']['destination']['address']
+
+                data_to_take['data']['histories'][0]
+                from datetime import datetime
+
+                datetime_string = data_to_take['data']['histories'][0]['date']
+                message_intransit = data_to_take['data']['histories'][0]['message']
+                if 'T' in datetime_string:
+                    parts = datetime_string.split('T')
+                    date_str_part = parts[0]
+                    time_str_part_with_offset = parts[1]
+
+                    # If you want to remove the timezone offset from the time string:
+                    time_str_part = time_str_part_with_offset.split('+')[0] if '+' in time_str_part_with_offset else \
+                                    time_str_part_with_offset.split('-')[0] if '-' in time_str_part_with_offset[1:] else \
+                                    time_str_part_with_offset # Handles negative offsets and cases without offset
+                    print(f'Barang sedang dalam pengiriman dengan status akhir: {message_intransit} \nBarang dikirim dari {origin_contact_name_intransit}, {origin_address_intransit} untuk tujuan {dest_contact_name_intransit}, {dest_address_intransit}')
+                else:
+                    print("\n'T' separator not found in the datetime string for string splitting method.")
+            else:
+                print('no data')          
+        
         elif tracking_data:
             print("\n--- Error Fetching Tracking Information ---")
             print(json.dumps(tracking_data, indent=4))
         else:
-            print("\nNo tracking data received or an unknown error occurred.")
+            print("\nBarang belum diterima dari ekspedisi.")
